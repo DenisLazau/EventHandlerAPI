@@ -30,9 +30,9 @@ namespace SuperStoreAPI.Services
             return _mapper.Map<List<EventView>>(Event);
         }
 
-        public async Task<EventView> GetEvent(string UserName)
+        public async Task<EventView> GetEvent(Guid Id)
         {
-            var Event = await _EventRepository.GetEvent(UserName);
+            var Event = await _EventRepository.GetEvent(Id);
             if (Event == null)
             {
                 return null;
@@ -43,26 +43,21 @@ namespace SuperStoreAPI.Services
         public async Task<EventView> AddEvent(EventCreationView EventCreationView)
         {
             var EventModel = _mapper.Map<Event>(EventCreationView);
-            var oldEvent = _EventRepository.GetEvent(EventCreationView.UserName);
-            if (oldEvent.Result != null)
-            {
-                throw new Exception("Event Already Exists");
-            }
             EventModel.EventId = new Guid();
             var Event = await _EventRepository.AddEvent(EventModel);
             await _EventRepository.SaveAsync();
             return _mapper.Map<EventView>(Event);
         }
 
-        public async Task DeleteEvent(string UserName)
+        public async Task DeleteEvent(Guid Id)
         {
-            _EventRepository.DeleteEvent(UserName);
+            _EventRepository.DeleteEvent(Id);
             await _EventRepository.SaveAsync();
         }
 
-        public async Task UpdateEvent(EventCreationView EventView)
+        public async Task UpdateEvent(EventCreationView EventView, Guid Id)
         {
-            var Event = await _EventRepository.GetEvent(EventView.UserName);
+            var Event = await _EventRepository.GetEvent(Id);
             _mapper.Map(EventView, Event);
             await _EventRepository.SaveAsync();
         }

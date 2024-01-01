@@ -29,10 +29,10 @@ namespace SuperStoreAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{Username}")]
-        public async Task<IActionResult> GetEvent(string Username)
+        [Route("{EventId}")]
+        public async Task<IActionResult> GetEvent(Guid Id)
         {
-            var Event = await _EventService.GetEvent(Username);
+            var Event = await _EventService.GetEvent(Id);
             if (Event == null)
             {
                 return NotFound();
@@ -47,12 +47,12 @@ namespace SuperStoreAPI.Controllers
             try
             {
 
-                if (EventCreationView.FirstName.ToLower() == "admin")
+                if (EventCreationView.Date <= DateTime.UtcNow)
                 {
                     return Problem(
                         type: "https://tools.ietf.org/html/rfc7231#section-6.5.3",
                         title: "Forbidden",
-                        detail: "Cannot set FirstName to admin.",
+                        detail: "Cannot set Date in the past.",
                         statusCode: StatusCodes.Status403Forbidden,
                         instance: HttpContext.Request.Path
                     );
@@ -67,39 +67,28 @@ namespace SuperStoreAPI.Controllers
         }
 
         [HttpDelete("{Username}")]
-        public async Task<IActionResult> DeleteEvent(string Username)
+        public async Task<IActionResult> DeleteEvent(Guid Id)
         {
-            var EventRepo = await _EventService.GetEvent(Username);
+            var EventRepo = await _EventService.GetEvent(Id);
             if (EventRepo == null)
             {
                 return NotFound();
             }
-            await _EventService.DeleteEvent(Username);
+            await _EventService.DeleteEvent(Id);
             return NoContent();
         }
 
         [HttpPut("{Username}")]
-        public async Task<IActionResult> UpdateEvent(string Username, [FromBody] EventCreationView EventCreationView)
+        public async Task<IActionResult> UpdateEvent(Guid Id, [FromBody] EventCreationView EventCreationView)
         {
 
-            var Event = await _EventService.GetEvent(Username);
+            var Event = await _EventService.GetEvent(Id);
             if (Event == null)
             {
                 return NotFound();
             }
 
-            if (EventCreationView.FirstName.ToLower() == "admin")
-            {
-                return Problem(
-                    type: "https://tools.ietf.org/html/rfc7231#section-6.5.3",
-                    title: "Forbidden",
-                    detail: "Cannot set FirstName to admin.",
-                    statusCode: StatusCodes.Status403Forbidden,
-                    instance: HttpContext.Request.Path
-                );
-            }
-
-            await _EventService.UpdateEvent(EventCreationView);
+            await _EventService.UpdateEvent(EventCreationView, Id);
 
             return NoContent();
 

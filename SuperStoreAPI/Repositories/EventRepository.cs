@@ -14,21 +14,25 @@ namespace SuperStoreAPI.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Event> GetEvent(string UserName)
+        public async Task<Event> GetEvent(Guid Id)
         {
-            if (UserName == string.Empty)
-            {
-                throw new ArgumentNullException(nameof(UserName));
-            }
-
             Event result = await _context.Events
-                .FirstOrDefaultAsync(u => u.Username == UserName);
+                .FirstOrDefaultAsync(u => u.EventId == Id);
             return result;
         }
 
         public async Task<List<Event>> GetEvents()
         {
             return await _context.Events
+                .OrderBy(u => u.Date)
+                .ToListAsync();
+        }
+
+        public async Task<List<Event>> FilterEvents(string Category, DateTime begin, DateTime end)
+        {
+            return await _context.Events
+                .Where(ev => ev.CalendarCategory == Category)
+                .Where(ev => ev.Date >= begin && ev.Date <= end)
                 .OrderBy(u => u.Date)
                 .ToListAsync();
         }
@@ -43,13 +47,13 @@ namespace SuperStoreAPI.Repositories
             await _context.Events.AddAsync(Event);
             return Event;
         }
-        public void DeleteEvent(string Username)
+        public void DeleteEvent(Guid Id)
         {
-            if (Username == null)
+            if (Id == null)
             {
-                throw new ArgumentNullException(nameof(Username));
+                throw new ArgumentNullException(nameof(Id));
             }
-            Event EventRem = _context.Events.Where(a => a.Username == Username).FirstOrDefault();
+            Event EventRem = _context.Events.Where(a => a.EventId == Id).FirstOrDefault();
              _context.Events.Remove(EventRem);
         }
         public void UpdateEvent(Event Event)

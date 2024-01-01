@@ -12,10 +12,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // repositories
 builder.Services.AddScoped<IExampleRepository, ExampleRepository>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
 
 // services
 builder.Services.AddScoped<IExampleService, ExampleService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddScoped<IEventService, EventService>();
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<StoreContext>(options =>
