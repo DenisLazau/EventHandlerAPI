@@ -14,15 +14,17 @@ namespace EventHandlerAPI.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Member> GetMember(string UserName)
+        public async Task<Member> GetMember(Guid Id)
         {
-            if (UserName == string.Empty)
-            {
-                throw new ArgumentNullException(nameof(UserName));
-            }
-
             Member result = await _context.Members
-                .FirstOrDefaultAsync(u => u.Username == UserName);
+                .FirstOrDefaultAsync(u => u.MemberId == Id);
+            return result;
+        }
+
+        public async Task<Member> GetMemberByUserName(string Username)
+        {
+            Member result = await _context.Members
+                .FirstOrDefaultAsync(u => u.Username == Username);
             return result;
         }
 
@@ -43,13 +45,9 @@ namespace EventHandlerAPI.Repositories
             await _context.Members.AddAsync(Member);
             return Member;
         }
-        public void DeleteMember(string Username)
+        public void DeleteMember(Guid Id)
         {
-            if (Username == null)
-            {
-                throw new ArgumentNullException(nameof(Username));
-            }
-            Member MemberRem = _context.Members.Where(a => a.Username == Username).FirstOrDefault();
+            Member MemberRem = _context.Members.Where(a => a.MemberId == Id).FirstOrDefault();
              _context.Members.Remove(MemberRem);
         }
         public void UpdateMember(Member Member)

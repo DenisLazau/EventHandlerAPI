@@ -24,9 +24,9 @@ namespace EventHandlerAPI.Services
             return _mapper.Map<List<MemberView>>(Member);
         }
 
-        public async Task<MemberView> GetMember(string UserName)
+        public async Task<MemberView> GetMember(Guid Id)
         {
-            Member Member = await _MemberRepository.GetMember(UserName);
+            Member Member = await _MemberRepository.GetMember(Id);
             if (Member == null)
             {
                 return null;
@@ -37,7 +37,7 @@ namespace EventHandlerAPI.Services
         public async Task<MemberView> AddMember(MemberCreationView MemberCreationView)
         {
             Member MemberModel = _mapper.Map<Member>(MemberCreationView);
-            Task<Member> oldMember = _MemberRepository.GetMember(MemberCreationView.UserName);
+            Task<Member> oldMember = _MemberRepository.GetMemberByUserName(MemberCreationView.UserName);
             if (oldMember.Result != null)
             {
                 throw new Exception("Member Already Exists");
@@ -48,15 +48,15 @@ namespace EventHandlerAPI.Services
             return _mapper.Map<MemberView>(Member);
         }
 
-        public async Task DeleteMember(string UserName)
+        public async Task DeleteMember(Guid Id)
         {
-            _MemberRepository.DeleteMember(UserName);
+            _MemberRepository.DeleteMember(Id);
             await _MemberRepository.SaveAsync();
         }
 
         public async Task UpdateMember(MemberCreationView MemberView)
         {
-            Member Member = await _MemberRepository.GetMember(MemberView.UserName);
+            Member Member = await _MemberRepository.GetMemberByUserName(MemberView.UserName);
             _mapper.Map(MemberView, Member);
             await _MemberRepository.SaveAsync();
         }

@@ -10,12 +10,12 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // repositories
-builder.Services.AddScoped<IExampleRepository, ExampleRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 
 // services
-builder.Services.AddScoped<IExampleService, ExampleService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IEventService, EventService>();
 

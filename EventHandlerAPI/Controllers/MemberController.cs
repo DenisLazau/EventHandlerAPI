@@ -22,10 +22,10 @@ namespace EventHandlerAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{Username}")]
-        public async Task<IActionResult> GetMember(string Username)
+        [Route("{Id}")]
+        public async Task<IActionResult> GetMember(Guid Id)
         {
-            MemberView Member = await _MemberService.GetMember(Username);
+            MemberView Member = await _MemberService.GetMember(Id);
             if (Member == null)
             {
                 return NotFound();
@@ -59,23 +59,23 @@ namespace EventHandlerAPI.Controllers
             }
         }
 
-        [HttpDelete("{Username}")]
-        public async Task<IActionResult> DeleteMember(string Username)
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteMember(Guid Id)
         {
-            MemberView MemberRepo = await _MemberService.GetMember(Username);
+            MemberView MemberRepo = await _MemberService.GetMember(Id);
             if (MemberRepo == null)
             {
                 return NotFound();
             }
-            await _MemberService.DeleteMember(Username);
+            await _MemberService.DeleteMember(Id);
             return NoContent();
         }
 
-        [HttpPut("{Username}")]
-        public async Task<IActionResult> UpdateMember(string Username, [FromBody] MemberCreationView MemberCreationView)
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> UpdateMember(Guid Id, [FromBody] MemberCreationView MemberCreationView)
         {
 
-            MemberView Member = await _MemberService.GetMember(Username);
+            MemberView Member = await _MemberService.GetMember(Id);
             if (Member == null)
             {
                 return NotFound();

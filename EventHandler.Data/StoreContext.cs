@@ -12,10 +12,10 @@ namespace EventHandler.Data
 
         }
 
-        public DbSet<Example> Examples { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<DbModels.Event> Event { get; set; }
         public DbSet<EventSeat> EventSeat { get; set; }
+        public DbSet<Ticket> Ticket { get; set; }
 
     }
 }

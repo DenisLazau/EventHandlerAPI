@@ -4,12 +4,13 @@ using EventHandlerAPI.Views;
 
 namespace EventHandlerAPI.Helpers
 {
-    public class ExampleProfile: Profile
+    public class TicketProfile: Profile
     {
-        public ExampleProfile()
+        public TicketProfile()
         {
-            CreateMap<Example, ExampleView>();
-            CreateMap<ExampleView, Example>();
+            CreateMap<Ticket, TicketView>();
+            CreateMap<TicketView, Ticket>();
+            CreateMap<TicketCreationView, Ticket>();
         }
     }
 }

@@ -6,11 +6,12 @@ namespace EventHandlerAPI.Interfaces
 {
     public interface IMemberRepository
     {
-        Task<Member> GetMember(string Username);
+        Task<Member> GetMember(Guid Id);
+        Task<Member> GetMemberByUserName(string Username);
         Task<List<Member>> GetMembers();
         Task<Member> AddMember(Member Member);
         void UpdateMember(Member Member);
-        void DeleteMember(string Username);
+        void DeleteMember(Guid Id);
         Task SaveAsync();
     }
 }

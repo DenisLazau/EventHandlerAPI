@@ -8,12 +8,11 @@ namespace EventHandler.Data.Models
 {
     public class Ticket
     {
-        public int Id { get; set; }
-        public int MemberId { get; set; }
+        public Guid Id { get; set; }
+        public Guid MemberId { get; set; }
         public double? Price { get; set; }
         public double? Discount { get; set; }
-        public int EventId { get; set; }
+        public Guid EventId { get; set; }
         public string Type { get; set; }
-
     }
 }
