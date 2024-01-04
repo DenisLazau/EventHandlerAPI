@@ -22,14 +22,14 @@ namespace EventHandlerAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{Category}")]
-        public async Task<IActionResult> FilterEvents()
+        [Route("filter/Category")]
+        public async Task<IActionResult> FilterEvents(string Category, DateTime begin, DateTime end)
         {
-            return Ok(await _EventService.GetEvents());
+            return Ok(await _EventService.FilterEvents(Category, begin, end));
         }
 
         [HttpGet]
-        [Route("{EventId}")]
+        [Route("{Id}")]
         public async Task<IActionResult> GetEvent(Guid Id)
         {
             EventView Event = await _EventService.GetEvent(Id);
@@ -66,7 +66,7 @@ namespace EventHandlerAPI.Controllers
             }
         }
 
-        [HttpDelete("{Username}")]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteEvent(Guid Id)
         {
             EventView EventRepo = await _EventService.GetEvent(Id);
@@ -78,7 +78,7 @@ namespace EventHandlerAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{Username}")]
+        [HttpPut("{Id}")]
         public async Task<IActionResult> UpdateEvent(Guid Id, [FromBody] EventCreationView EventCreationView)
         {
 

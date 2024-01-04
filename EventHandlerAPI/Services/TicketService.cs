@@ -14,9 +14,11 @@ namespace EventHandlerAPI.Services
         private readonly IEventRepository _EventRepository;
         private readonly IMapper _mapper;
 
-        public TicketService(ITicketRepository TicketRepository, IMapper mapper)
+        public TicketService(ITicketRepository TicketRepository, IMemberRepository MemberRepository, IEventRepository EventRepository ,IMapper mapper)
         {
             _TicketRepository = TicketRepository;
+            _MemberRepository = MemberRepository;
+            _EventRepository = EventRepository;
             _mapper = mapper;
         }
 
@@ -45,18 +47,28 @@ namespace EventHandlerAPI.Services
                 throw new Exception("Ticket Already Exists");
             }
             TicketModel.Id = new Guid();
-            var Member = _MemberRepository.GetMember(TicketCreationView.MemberId);
-            var Event = _EventRepository.GetEvent(TicketCreationView.EventId);
+            Guid memberId = TicketCreationView.MemberId;
+            Member Member = await _MemberRepository.GetMember(memberId);
+            if (Member == null)
+            {
+                throw new Exception("The Member does not exist");
+            }
+            Guid eventId = TicketCreationView.EventId;
+            EventHandler.Data.DbModels.Event Event = await _EventRepository.GetEvent(eventId);
+            if (Event == null)
+            {
+                throw new Exception("The Event does not exist");
+            }
             List<EventSeat> seats = await _EventRepository.GetEventSeats(TicketCreationView.EventId);
-            var tickets = _TicketRepository.GetTicketByEvent(TicketCreationView.EventId);
-            var seat  = seats.FirstOrDefault(s => s.SeatType == TicketCreationView.Type);
+            Task<List<Ticket>> tickets = _TicketRepository.GetTicketByEvent(TicketCreationView.EventId);
+            EventSeat? seat  = seats.FirstOrDefault(s => s.SeatType == TicketCreationView.Type);
             if (tickets.Result.Count >= seat.NumberOfSeats)
             {
                 throw new Exception("There are no more available seats for this event");
             }
             if (TicketCreationView.Type == "VIP")
             {
-                var discount = 20;
+                int discount = 20;
                 TicketModel.Discount = discount;
                 TicketModel.Price = seat.Price % (100 - discount);
             }

@@ -12,6 +12,7 @@ namespace EventHandlerAPI.Interfaces
         void UpdateEvent(Event Event);
         void DeleteEvent(Guid Id);
         Task SaveAsync();
+        void UpdateEventSeat(EventHandler.Data.Models.EventSeat EventSeat);
         Task<EventHandler.Data.Models.EventSeat> AddEventSeat(EventHandler.Data.Models.EventSeat eventSeat);
     }
 }

@@ -21,7 +21,7 @@ namespace EventHandlerAPI.Services
         public async Task<List<EventView>> GetEvents()
         {
             List<EventHandler.Data.DbModels.Event> Events = await _EventRepository.GetEvents();
-            var result = _mapper.Map<List<EventView>>(Events);
+            List<EventView> result = _mapper.Map<List<EventView>>(Events);
             foreach (EventView view in result)
             {
                 List<EventSeat> seats = await _EventRepository.GetEventSeats(view.EventId);
@@ -32,8 +32,8 @@ namespace EventHandlerAPI.Services
 
         public async Task<List<EventView>> FilterEvents(string Category, DateTime begin, DateTime end)
         {
-            List<EventHandler.Data.DbModels.Event> Events = await _EventRepository.GetEvents();
-            var result = _mapper.Map<List<EventView>>(Events);
+            List<EventHandler.Data.DbModels.Event> Events = await _EventRepository.FilterEvents(Category, begin, end);
+            List<EventView> result = _mapper.Map<List<EventView>>(Events);
             foreach (EventView view in result)
             {
                 List<EventSeat> seats = await _EventRepository.GetEventSeats(view.EventId);
@@ -83,6 +83,16 @@ namespace EventHandlerAPI.Services
         {
             EventHandler.Data.DbModels.Event Event = await _EventRepository.GetEvent(Id);
             _mapper.Map(EventView, Event);
+            _EventRepository.UpdateEvent(Event);
+            List<EventSeat> seats = await _EventRepository.GetEventSeats(Id);
+            foreach (EventSeat seat in EventView.Seats)
+            {
+                EventSeat? OriginalSeat = seats.Where(s => s.SeatType == seat.SeatType).FirstOrDefault();
+                var id = OriginalSeat.Id;
+                OriginalSeat.NumberOfSeats = seat.NumberOfSeats;
+                OriginalSeat.Price = seat.Price;
+                _EventRepository.UpdateEventSeat(OriginalSeat);
+            }
             await _EventRepository.SaveAsync();
         }
     }

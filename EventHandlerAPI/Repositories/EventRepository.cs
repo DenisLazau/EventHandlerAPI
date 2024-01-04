@@ -81,6 +81,11 @@ namespace EventHandlerAPI.Repositories
             _context.Event.Update(Event);
         }
 
+        public void UpdateEventSeat(EventHandler.Data.Models.EventSeat EventSeat)
+        {
+            _context.EventSeat.Update(EventSeat);
+        }
+
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

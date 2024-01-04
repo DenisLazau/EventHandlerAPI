@@ -20,9 +20,6 @@ namespace EventHandlerAPI.Helpers
             CreateMap<EventHandler.Data.DbModels.Event, EventView>().ForMember(
                     dest => dest.Seats,
                     opt => opt.Ignore());
-                //.ForMember(
-                //    dest => dest.EventId,
-                //    opt => opt.MapFrom(src => src.EventId));
         }
     }
 }
