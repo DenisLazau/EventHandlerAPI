@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EventHandler.Data.Models;
 using EventHandler.Data.DbModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EventHandler.Data
 {
@@ -16,6 +17,5 @@ namespace EventHandler.Data
         public DbSet<DbModels.Event> Event { get; set; }
         public DbSet<EventSeat> EventSeat { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
-
     }
 }

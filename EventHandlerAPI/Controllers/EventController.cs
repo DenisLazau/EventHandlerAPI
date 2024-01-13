@@ -23,9 +23,9 @@ namespace EventHandlerAPI.Controllers
 
         [HttpGet]
         [Route("filter/Category")]
-        public async Task<IActionResult> FilterEvents(string Category, DateTime begin, DateTime end)
+        public async Task<IActionResult> FilterEvents(string Category)
         {
-            return Ok(await _EventService.FilterEvents(Category, begin, end));
+            return Ok(await _EventService.FilterEvents(Category));
         }
 
         [HttpGet]

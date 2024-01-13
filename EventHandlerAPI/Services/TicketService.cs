@@ -2,6 +2,7 @@
 using EventHandler.Data;
 using EventHandler.Data.Models;
 using EventHandlerAPI.Interfaces;
+using EventHandlerAPI.Repositories;
 using EventHandlerAPI.Views;
 using System.Collections.Generic;
 
@@ -12,13 +13,15 @@ namespace EventHandlerAPI.Services
         private readonly ITicketRepository _TicketRepository;
         private readonly IMemberRepository _MemberRepository;
         private readonly IEventRepository _EventRepository;
+        private readonly IEventService _EventService;
         private readonly IMapper _mapper;
 
-        public TicketService(ITicketRepository TicketRepository, IMemberRepository MemberRepository, IEventRepository EventRepository ,IMapper mapper)
+        public TicketService(ITicketRepository TicketRepository, IMemberRepository MemberRepository, IEventRepository EventRepository ,IMapper mapper, IEventService EventService)
         {
             _TicketRepository = TicketRepository;
             _MemberRepository = MemberRepository;
             _EventRepository = EventRepository;
+            _EventService = EventService;
             _mapper = mapper;
         }
 
@@ -72,6 +75,14 @@ namespace EventHandlerAPI.Services
                 TicketModel.Discount = discount;
                 TicketModel.Price = seat.Price % (100 - discount);
             }
+            seat.NumberOfSeats--;
+            EventCreationView updatedEvent = new EventCreationView();
+            updatedEvent.Event_Type = Event.Event_Type;
+            updatedEvent.CalendarCategory = Event.CalendarCategory;
+            updatedEvent.Date = Event.Date;
+            updatedEvent.Seats = seats;
+            _EventService.UpdateEvent(updatedEvent, eventId);
+
             Ticket Ticket = await _TicketRepository.AddTicket(TicketModel);
             await _TicketRepository.SaveAsync();
             return _mapper.Map<TicketView>(Ticket);

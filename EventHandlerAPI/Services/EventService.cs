@@ -30,9 +30,9 @@ namespace EventHandlerAPI.Services
             return result;
         }
 
-        public async Task<List<EventView>> FilterEvents(string Category, DateTime begin, DateTime end)
+        public async Task<List<EventView>> FilterEvents(string Category)
         {
-            List<EventHandler.Data.DbModels.Event> Events = await _EventRepository.FilterEvents(Category, begin, end);
+            List<EventHandler.Data.DbModels.Event> Events = await _EventRepository.FilterEvents(Category);
             List<EventView> result = _mapper.Map<List<EventView>>(Events);
             foreach (EventView view in result)
             {

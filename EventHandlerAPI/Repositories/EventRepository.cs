@@ -35,11 +35,10 @@ namespace EventHandlerAPI.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Event>> FilterEvents(string Category, DateTime begin, DateTime end)
+        public async Task<List<Event>> FilterEvents(string Category)
         {
             return await _context.Event
                 .Where(ev => ev.CalendarCategory == Category)
-                .Where(ev => ev.Date >= begin && ev.Date <= end)
                 .OrderBy(u => u.Date)
                 .ToListAsync();
         }
