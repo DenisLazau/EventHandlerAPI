@@ -34,6 +34,24 @@ namespace EventHandlerAPI.Services
             return _mapper.Map<MemberView>(Member);
         }
 
+        public async Task<MemberView> Login(string username, string password)
+        {
+            Member Member = await _MemberRepository.GetMemberByUserName(username);
+            if (Member == null)
+            {
+                throw new Exception("Member does not Exist!!");
+            }
+            if (Member.Password == password)
+            {
+                return _mapper.Map<MemberView>(Member);
+            }
+            else
+            {
+                throw new Exception("Wrong password");
+            }
+           
+        }
+
         public async Task<MemberView> AddMember(MemberCreationView MemberCreationView)
         {
             Member MemberModel = _mapper.Map<Member>(MemberCreationView);

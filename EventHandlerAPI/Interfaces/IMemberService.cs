@@ -7,6 +7,7 @@ namespace EventHandlerAPI.Interfaces
     {
         public Task<List<MemberView>> GetMembers();
         public Task<MemberView> GetMember(Guid Id);
+        public Task<MemberView> Login(string username, string password);
         public Task<MemberView> AddMember(MemberCreationView MemberCreationView);
         public Task DeleteMember(Guid Id);
         public Task UpdateMember(MemberCreationView Member);

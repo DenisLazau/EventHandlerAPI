@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using EventHandlerAPI.Interfaces;
 using EventHandlerAPI.Views;
+using EventHandlerAPI.Helpers.Items;
 
 namespace EventHandlerAPI.Controllers
 {
@@ -26,6 +27,19 @@ namespace EventHandlerAPI.Controllers
         public async Task<IActionResult> GetMember(Guid Id)
         {
             MemberView Member = await _MemberService.GetMember(Id);
+            if (Member == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Member);
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody]LoginInformation login)
+        {
+            MemberView Member = await _MemberService.Login(login.Username, login.Password);
             if (Member == null)
             {
                 return NotFound();

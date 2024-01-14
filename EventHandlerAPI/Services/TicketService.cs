@@ -65,7 +65,11 @@ namespace EventHandlerAPI.Services
             List<EventSeat> seats = await _EventRepository.GetEventSeats(TicketCreationView.EventId);
             Task<List<Ticket>> tickets = _TicketRepository.GetTicketByEvent(TicketCreationView.EventId);
             EventSeat? seat  = seats.FirstOrDefault(s => s.SeatType == TicketCreationView.Type);
-            if (tickets.Result.Count >= seat.NumberOfSeats)
+            if(seat == null)
+            {
+                throw new Exception("There are no more available seats for this event");
+            }
+            if (seat.NumberOfSeats <= 0 || seat == null)
             {
                 throw new Exception("There are no more available seats for this event");
             }
