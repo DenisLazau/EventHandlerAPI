@@ -63,13 +63,9 @@ namespace EventHandlerAPI.Services
                 throw new Exception("The Event does not exist");
             }
             List<EventSeat> seats = await _EventRepository.GetEventSeats(TicketCreationView.EventId);
-            Task<List<Ticket>> tickets = _TicketRepository.GetTicketByEvent(TicketCreationView.EventId);
+            List<Ticket> tickets = await _TicketRepository.GetTicketByEvent(TicketCreationView.EventId);
             EventSeat? seat  = seats.FirstOrDefault(s => s.SeatType == TicketCreationView.Type);
-            if(seat == null)
-            {
-                throw new Exception("There are no more available seats for this event");
-            }
-            if (seat.NumberOfSeats <= 0 || seat == null)
+            if (seat == null || seat.NumberOfSeats <= 0)
             {
                 throw new Exception("There are no more available seats for this event");
             }
@@ -85,7 +81,7 @@ namespace EventHandlerAPI.Services
             updatedEvent.CalendarCategory = Event.CalendarCategory;
             updatedEvent.Date = Event.Date;
             updatedEvent.Seats = seats;
-            _EventService.UpdateEvent(updatedEvent, eventId);
+            await _EventService.UpdateEvent(updatedEvent, eventId);
 
             Ticket Ticket = await _TicketRepository.AddTicket(TicketModel);
             await _TicketRepository.SaveAsync();
