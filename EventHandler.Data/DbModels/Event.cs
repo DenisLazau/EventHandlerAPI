@@ -12,5 +12,6 @@ namespace EventHandler.Data.DbModels
         public string Event_Type { get; set; }
         public string CalendarCategory { get; set; }
         public DateTime Date { get; set; }
+        public string Event_name { get; set; }
     }
 }
